@@ -287,8 +287,9 @@ export type CATEGORIES_QUERYResult = Array<{
     _type: "image";
   };
 }>;
+
 // Variable: MY_ORDERS_QUERY
-// Query: *[_type == 'order' && clerkUserId == $userId] | order(orderData desc){    ...,products[]{      ...,product->    }  }
+// Query: *[_type == 'order' && clerkUserId == $userId] | order(orderDate desc){ ...,products[]{ ...,product-> } }
 export type MY_ORDERS_QUERYResult = Array<{
   _id: string;
   _type: "order";

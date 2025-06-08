@@ -18,7 +18,7 @@ const ProductCharacteristics = ({ product }: { product: Product }) => {
           </p>
           <p className="flex items-center justify-between">
             Collection:{" "}
-            <span className="font-semibold tracking-wide">2024</span>
+            <span className="font-semibold tracking-wide">2025</span>
           </p>
           <p className="flex items-center justify-between">
             Type:{" "}

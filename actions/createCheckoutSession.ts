@@ -26,11 +26,11 @@ export async function createCheckoutSession(
     });
     const customerId = customers.data.length > 0 ? customers.data[0].id : "";
     const sessionPayload: Stripe.Checkout.SessionCreateParams = {
-      metadata: {
-        orderNumber: metadata?.orderNumber,
-        customerName: metadata?.customerName,
-        customerEmail: metadata?.customerEmail,
-        clerkUserId: metadata?.clerkUserId,
+          metadata: {
+        orderNumber: String(metadata?.orderNumber || ""),
+        customerName: String(metadata?.customerName || ""),
+        customerEmail: String(metadata?.customerEmail || ""),
+        clerkUserId: String(metadata?.clerkUserId || ""),
       },
       mode: "payment",
       allow_promotion_codes: true,

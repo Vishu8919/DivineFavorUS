@@ -11,6 +11,7 @@ export async function POST(req: NextRequest) {
   const sig = headersList.get("stripe-signature");
 
   if (!sig) {
+    console.log("Missing stripe signature");
     return NextResponse.json(
       {
         error: "No Signature",
@@ -22,6 +23,7 @@ export async function POST(req: NextRequest) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_KEY;
 
   if (!webhookSecret) {
+    
     console.log("Stripe webhook secret is not set");
     return NextResponse.json(
       {
@@ -45,12 +47,14 @@ export async function POST(req: NextRequest) {
 
   if (event.type === "checkout.session.completed") {
     const session = event.data.object as Stripe.Checkout.Session;
+     console.log("Handling checkout.session.completed for session:", session.id);
     const invoice = session.invoice
       ? await stripe.invoices.retrieve(session.invoice as string)
       : null;
 
     try {
-      await createOrderInsanity(session, invoice);
+      const createdOrder = await createOrderInsanity(session, invoice);
+      console.log("Order created in Sanity:", createdOrder._id);
     } catch (error) {
       console.error("Error creating order in sanity:", error);
       return NextResponse.json(
@@ -59,8 +63,8 @@ export async function POST(req: NextRequest) {
         },
         { status: 400 }
       );
-    }
-  }
+    } 
+  } 
   return NextResponse.json({ received: true });
 }
 
@@ -78,6 +82,12 @@ async function createOrderInsanity(
   } = session;
   const { orderNumber, customerName, customerEmail, clerkUserId } =
     metadata as unknown as Metadata;
+    console.log("Creating order with metadata:", {
+    orderNumber,
+    customerName,
+    customerEmail,
+    clerkUserId,
+  });
 
   const lineItemsWithProduct = await stripe.checkout.sessions.listLineItems(
     id,
@@ -99,7 +109,7 @@ async function createOrderInsanity(
     stripeCheckoutSessionId: id,
     stripePaymentIntentId: payment_intent,
     customerName,
-    stripeCustomerId: customerEmail,
+    stripeCustomerId: session.customer as string,
     clerkUserId,
     email: customerEmail,
     currency,
@@ -109,7 +119,7 @@ async function createOrderInsanity(
     products: sanityProducts,
     totalPrice: amount_total ? amount_total / 100 : 0,
     status: "paid",
-    orderDate: new Date().toISOString(),
+    orderDate: new Date((session.created ?? Date.now()) * 1000).toISOString(),
     invoice: invoice
       ? {
           id: invoice.id,

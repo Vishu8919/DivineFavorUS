@@ -14,6 +14,7 @@ import React from "react";
 
 const OrdersPage = async () => {
   const { userId } = await auth();
+  console.log("Fetching orders for Clerk User ID:", userId);
   if (!userId) {
     return redirect("/");
   }
