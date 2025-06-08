@@ -13,8 +13,8 @@ const raleway = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Tulos Ecommerce app for shoppers",
-  description: "An Ecommerce app for education purposes",
+  title: "DivineFavor Ecommerce app for shoppers",
+  description: "An Ecommerce app for Customized clothes",
 };
 
 export default function RootLayout({

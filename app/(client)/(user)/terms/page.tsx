@@ -9,14 +9,14 @@ const TermsPage = () => {
         <section>
           <h2 className="text-xl font-semibold mb-2">1. Acceptance of Terms</h2>
           <p>
-            By accessing and using Tulos&apos;s services, you agree to be bound
+            By accessing and using DivineFavor&apos;s services, you agree to be bound
             by these Terms and Conditions.
           </p>
         </section>
         <section>
           <h2 className="text-xl font-semibold mb-2">2. Use of Services</h2>
           <p>
-            You agree to use Tulos&apos;s services only for lawful purposes and
+            You agree to use DivineFavor&apos;s services only for lawful purposes and
             in accordance with these Terms and Conditions.
           </p>
         </section>
@@ -25,8 +25,8 @@ const TermsPage = () => {
             3. Intellectual Property
           </h2>
           <p>
-            All content and materials available on Tulos&apos;s services are the
-            property of Tulos and are protected by applicable intellectual
+            All content and materials available on DivineFavor&apos;s services are the
+            property of DivineFavor and are protected by applicable intellectual
             property laws.
           </p>
         </section>
@@ -35,7 +35,7 @@ const TermsPage = () => {
             4. Limitation of Liability
           </h2>
           <p>
-            Tulos shall not be liable for any indirect, incidental, special,
+            DivineFavor shall not be liable for any indirect, incidental, special,
             consequential or punitive damages resulting from your use of our
             services.
           </p>
@@ -44,7 +44,7 @@ const TermsPage = () => {
           <h2 className="text-xl font-semibold mb-2">5. Governing Law</h2>
           <p>
             These Terms and Conditions shall be governed by and construed in
-            accordance with the laws of the jurisdiction in which Tulos
+            accordance with the laws of the jurisdiction in which DivineFavor
             operates.
           </p>
         </section>

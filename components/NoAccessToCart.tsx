@@ -16,7 +16,7 @@ const NoAccessToCart = () => {
       <Card className="w-full max-w-md">
         <CardHeader className="space-y-1">
           <div className="flex justify-center">
-            <Logo>Tulos</Logo>
+            <Logo>DivineFavor</Logo>
           </div>
           <CardTitle className="text-2xl font-bold text-center">
             Welcome Back!

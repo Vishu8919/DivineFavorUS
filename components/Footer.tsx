@@ -14,7 +14,7 @@ const Footer = () => {
         <FooterTop />
         <div className="py-12 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="space-y-4">
-            <Logo>Tulos</Logo>
+            <Logo>DivineFavor</Logo>
             <p className="text-gray-600 text-sm">
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Rem ex ad
               at vitae esse. Vero fuga laborum disti.
