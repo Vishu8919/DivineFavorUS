@@ -72,7 +72,11 @@ const CartPage = () => {
       const checkoutUrl = await createCheckoutSession(cartProducts, metadata);
       if (checkoutUrl) {
         window.location.href = checkoutUrl;
+        return;
       }
+      else {
+      toast.error("Failed to initiate checkout. Please try again.");
+       }
     } catch (error) {
       console.error("Error creating checkout session:", error);
     } finally {

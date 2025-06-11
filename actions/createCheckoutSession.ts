@@ -50,6 +50,11 @@ export async function createCheckoutSession(
       },
       success_url: `${process.env.NEXT_PUBLIC_BASE_URL}/success?session_id={CHECKOUT_SESSION_ID}&orderNumber=${metadata.orderNumber}`,
       cancel_url: `${process.env.NEXT_PUBLIC_BASE_URL}/cart`,
+
+      shipping_address_collection: {
+    allowed_countries: ["US", "CA", "IN"], // You can add more countries
+  },
+
       line_items: items.map((item) => {
         if (!item.product._id) {
           throw new Error(`Missing product ID for item: ${item.product.name || "Unknown"}`);

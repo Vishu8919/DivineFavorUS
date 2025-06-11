@@ -54,6 +54,7 @@ export async function POST(req: NextRequest) {
     console.log("🟢 Webhook: checkout.session.completed detected");
     const session = event.data.object as Stripe.Checkout.Session;
     console.log("Handling checkout.session.completed for session:", session.id);
+    const shipping = session.shipping_details?.address;
 
     const invoice = session.invoice
       ? await stripe.invoices.retrieve(session.invoice as string)
@@ -97,6 +98,7 @@ async function createOrderInsanity(
     payment_intent,
     total_details,
     customer,
+    shipping_details,
   } = session;
 
   const {
@@ -145,6 +147,25 @@ async function createOrderInsanity(
     throw new Error("No valid products found in checkout session");
   }
 
+  console.log("🔍 Stripe Shipping Details:", JSON.stringify(shipping_details, null, 2));
+
+  // Always create a shippingInfo object, even if some fields are empty
+  const shippingInfo = {
+    _type: "object",
+    name: shipping_details?.name || "",
+    line1: shipping_details?.address?.line1 || "",
+    line2: shipping_details?.address?.line2 || "",
+    city: shipping_details?.address?.city || "",
+    state: shipping_details?.address?.state || "",
+    postal_code: shipping_details?.address?.postal_code || "",
+    country: shipping_details?.address?.country || "",
+  };
+
+  if (!shipping_details?.address) {
+    console.warn("⚠️ Shipping details missing from Stripe session");
+  }
+
+
   const orderData = {
     _type: "order",
     orderNumber,
@@ -170,6 +191,7 @@ async function createOrderInsanity(
           hosted_invoice_url: invoice.hosted_invoice_url,
         }
       : undefined,
+     shipping: shippingInfo,
   };
 
   console.log("Webhook: Order data to be created:", JSON.stringify(orderData, null, 2));

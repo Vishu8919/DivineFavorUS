@@ -2,7 +2,7 @@
 
 import useCartStore from "@/store";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "motion/react";
 import { Check, Home, Package, ShoppingBag } from "lucide-react";
 import Link from "next/link";
@@ -13,11 +13,28 @@ const SuccessPage = () => {
   const sessionId = searchParams.get("session_id");
   const { resetCart } = useCartStore();
   const router = useRouter();
+
+  const [shipping, setShipping] = useState<any>(null);
+  const [shippingName, setShippingName] = useState<string | null>(null);
+
   useEffect(() => {
     if (!orderNumber && !sessionId) {
       router.push("/");
-    } else {
-      resetCart();
+      return;
+    }
+
+    resetCart();
+
+    if (sessionId) {
+      fetch(`/api/get-checkout-session?session_id=${sessionId}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.shipping) {
+            setShipping(data.shipping);
+            setShippingName(data.name || null);
+          }
+        })
+        .catch((err) => console.error("Failed to fetch session:", err));
     }
   }, [orderNumber, sessionId, resetCart, router]);
 
@@ -46,6 +63,22 @@ const SuccessPage = () => {
             <span className="text-black font-semibold">{orderNumber}</span>
           </p>
         </div>
+
+            {shipping && (
+        <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-8 text-left text-sm text-gray-700">
+          <h3 className="font-semibold text-gray-900 mb-2">Shipping Address:</h3>
+          <p>
+            {shippingName && `${shippingName}, `}
+            {shipping.line1 && `${shipping.line1}, `}
+            {shipping.line2 && `${shipping.line2}, `}
+            {shipping.city && `${shipping.city}, `}
+            {shipping.state && `${shipping.state} `}
+            {shipping.postal_code && `${shipping.postal_code}, `}
+            {shipping.country}
+          </p>
+        </div>
+      )}
+
         <div className="bg-gray-50 border border-gray-200 rounded-lg p-4 mb-8">
           <h2 className="font-semibold text-gray-900 mb-2">
             What&apos;s Next?
