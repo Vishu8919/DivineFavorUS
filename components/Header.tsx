@@ -29,16 +29,28 @@ const Header = async () => {
         </div>
         <div className="w-auto md:w-1/3 flex items-center justify-end gap-5">
           <SearchBar />
+          
+          <div className="group relative flex flex-col items-center">
           <CartIcon />
+          <span className="absolute -bottom-5 opacity-0 group-hover:opacity-100 text-xs font-medium text-gray-700 mt-1">
+          Cart
+        </span>
+        </div>
 
           <ClerkLoaded>
             <SignedIn>
-              <Link href={"/orders"} className="group relative">
-                <ListOrdered className="w-5 h-5 group-hover:text-darkColor hoverEffect" />
-                <span className="absolute -top-1 -right-1 bg-darkColor text-white h-3.5 w-3.5 rounded-full text-xs font-semibold flex items-center justify-center">
-                  {orders?.length ? orders?.length : 0}
-                </span>
-              </Link>
+           {/* My Orders Icon with Hover Text */}
+         <div className="group relative">
+            <Link href={"/orders"} className="group relative">
+              <ListOrdered className="w-5 h-5 group-hover:text-darkColor hoverEffect" />
+              <span className="absolute -top-1 -right-1 bg-darkColor text-white h-3.5 w-3.5 rounded-full text-xs font-semibold flex items-center justify-center">
+                {orders?.length ? orders?.length : 0}
+              </span>
+            </Link>
+            <span className="absolute -bottom-5 opacity-0 group-hover:opacity-100 text-xs font-medium text-gray-700 text-center">
+              Orders
+            </span>
+          </div>
               <UserButton />
             </SignedIn>
             {!user && (

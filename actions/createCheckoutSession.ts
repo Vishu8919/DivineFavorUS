@@ -29,11 +29,25 @@ export async function createCheckoutSession(
       throw new Error("Missing required metadata fields");
     }
 
-    const customers = await stripe.customers.list({
-      email: metadata.customerEmail,
-      limit: 1,
-    });
-    const customerId = customers.data.length > 0 ? customers.data[0].id : "";
+          const customers = await stripe.customers.list({
+        email: metadata.customerEmail,
+        limit: 1,
+      });
+
+      let customerId = "";
+
+      if (customers.data.length > 0) {
+        const customer = customers.data[0];
+
+        // ✅ Ensure email is attached to the Stripe customer
+        if (!customer.email) {
+          await stripe.customers.update(customer.id, {
+            email: metadata.customerEmail,
+          });
+        }
+
+        customerId = customer.id;
+      }
 
     const sessionPayload: Stripe.Checkout.SessionCreateParams = {
       metadata: {

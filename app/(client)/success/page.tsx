@@ -87,6 +87,7 @@ const SuccessPage = () => {
             <li>Check your email for order confirmation</li>
             <li>We&apos;ll notify you when your order ships</li>
             <li>Track your order status anytime</li>
+             <li>You can download your invoice from the My Orders section</li>
           </ul>
         </div>
         {/* Order tracker */}
