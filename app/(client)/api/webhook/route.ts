@@ -98,8 +98,10 @@ async function createOrderInsanity(
     payment_intent,
     total_details,
     customer,
-    shipping_details,
+    collected_information,
   } = session;
+
+  const shipping_details = collected_information?.shipping_details || null;
 
   const {
     orderNumber,
