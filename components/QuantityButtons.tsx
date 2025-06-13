@@ -10,10 +10,13 @@ interface Props {
   product: Product;
   className?: string;
 }
+
 const QuantityButtons = ({ product, className }: Props) => {
   const { addItem, getItemCount, removeItem } = useCartStore();
   const itemCount = getItemCount(product?._id);
   const isOutOfStock = product?.stock === 0;
+  const hasReachedStockLimit = itemCount >= (product?.stock ?? 0);
+
   const handleRemoveProduct = () => {
     removeItem(product?._id);
     if (itemCount > 1) {
@@ -22,6 +25,16 @@ const QuantityButtons = ({ product, className }: Props) => {
       toast.success(`${product?.name?.substring(0, 12)} removed successfully!`);
     }
   };
+
+  const handleAddProduct = () => {
+    if (hasReachedStockLimit) {
+      toast.error("Cannot add more than available stock.");
+      return;
+    }
+    addItem(product);
+    toast.success(`${product?.name?.substring(0, 12)}... added successfully!`);
+  };
+
   return (
     <div className={cn("flex items-center gap-1 text-base pb-1", className)}>
       <Button
@@ -33,16 +46,14 @@ const QuantityButtons = ({ product, className }: Props) => {
       >
         <Minus />
       </Button>
+
       <span className="font-semibold w-8 text-center text-darkColor">
         {itemCount}
       </span>
+
       <Button
-        onClick={() => {
-          addItem(product);
-          toast.success(
-            `${product?.name?.substring(0, 12)}... added successfully!`
-          );
-        }}
+        onClick={handleAddProduct}
+        disabled={hasReachedStockLimit || isOutOfStock}
         variant="outline"
         size="icon"
         className="w-6 h-6"

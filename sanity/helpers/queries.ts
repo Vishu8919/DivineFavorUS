@@ -60,5 +60,86 @@ export const getMyOrders = async (userId: string) => {
     console.error("Error fetching orders:", error);
     return [];
   }
+
 };
+
+export const getActiveSales = async () => {
+  const ACTIVE_SALES_QUERY = defineQuery(`
+    *[_type == "sale" && startDate <= now() && endDate >= now()] | order(startDate desc)[0] {
+      ...,
+      products[]->{
+        _id,
+        name,
+        slug,
+        images,
+        intro,
+        description,
+        price,
+        discount,
+        stock,
+        status,
+        variant
+      }
+    }
+  `);
+
+  try {
+    const sale = await sanityFetch({
+      query: ACTIVE_SALES_QUERY,
+    });
+    return sale?.data || null;
+  } catch (error) {
+    console.error("Error fetching active sales:", error);
+    return null;
+  }
+};
+
+export const getAllOrders = async () => {
+  const ALL_ORDERS_QUERY = defineQuery(`
+    *[_type == 'order']{
+      orderDate,
+      products[]{
+        quantity,
+        product->{
+          _id,
+          name,
+          price,
+          discount
+        }
+      }
+    }
+  `);
+
+  try {
+    const orders = await sanityFetch({
+      query: ALL_ORDERS_QUERY,
+    });
+    return orders?.data || [];
+  } catch (error) {
+    console.error("Error fetching all orders for analytics:", error);
+    return [];
+  }
+};
+
+export const getAllProducts = async () => {
+  const ALL_PRODUCTS_QUERY = defineQuery(`*[_type == 'product']{
+    _id,
+    name,
+    stock
+  }`);
+
+  try {
+    const products = await sanityFetch({
+      query: ALL_PRODUCTS_QUERY,
+    });
+    return products?.data || [];
+  } catch (error) {
+    console.error("Error fetching all products for inventory:", error);
+    return [];
+  }
+};
+
+
+
+
 

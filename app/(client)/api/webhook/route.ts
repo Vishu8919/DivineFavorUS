@@ -205,6 +205,34 @@ async function createOrderInsanity(
     const order = await backendClient.create(orderData);
     console.log("Webhook: Order created successfully:", order._id);
 
+    // Update stock for each purchased product
+try {
+  await Promise.all(
+    sanityProducts.map(async (item) => {
+      const productId = item.product._ref;
+      const quantity = item.quantity;
+
+      // Fetch current stock
+      const product = await backendClient.getDocument(productId);
+
+      if (product?.stock !== undefined && typeof product.stock === "number") {
+        const newStock = Math.max(0, product.stock - quantity);
+
+        await backendClient
+          .patch(productId)
+          .set({ stock: newStock })
+          .commit();
+
+        console.log(` Stock updated for product ${productId}: ${product.stock} → ${newStock}`);
+      } else {
+        console.warn(`Product ${productId} does not have a stock field or it’s invalid`);
+      }
+    })
+  );
+} catch (err) {
+  console.error(" Error updating product stock:", err);
+}
+
     await notifyAdminOnSlack({
   orderId: order._id,
   customerName,
