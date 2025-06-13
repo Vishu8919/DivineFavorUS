@@ -4,6 +4,9 @@ import { backendClient } from "@/sanity/lib/backendClient";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
+import { notifyAdminOnSlack } from "@/lib/notifications";
+
+
 
 export async function POST(req: NextRequest) {
   console.log("🟢 Webhook: Request received");
@@ -201,6 +204,14 @@ async function createOrderInsanity(
   try {
     const order = await backendClient.create(orderData);
     console.log("Webhook: Order created successfully:", order._id);
+
+    await notifyAdminOnSlack({
+  orderId: order._id,
+  customerName,
+  email: customerEmail,
+  total: amount_total ? amount_total / 100 : 0,
+});
+
     return order;
   } catch (error: unknown) {
     if (error instanceof Error) {
